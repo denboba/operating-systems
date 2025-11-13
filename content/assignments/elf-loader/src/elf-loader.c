@@ -403,7 +403,11 @@ void load_and_run(const char *filename, int argc, char **argv, char **envp)
 	stack_ptr--;
 	*stack_ptr = argc;
 
+	// Ensure stack is 16-byte aligned
 	sp = stack_ptr;
+	if ((uintptr_t)sp & 0xF) {
+		sp = (void *)((uintptr_t)sp & ~0xFUL);
+	}
 
 	// Calculate entry point
 	void (*entry)();
